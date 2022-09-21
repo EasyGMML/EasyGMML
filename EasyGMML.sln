@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94B28E5F-042F-4A98-8E9E-235319B4B02C}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{F2DDFBB2-F9E6-4A84-9E53-C1D8BC2DFAA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bat", "bat", "{EE712764-9A55-4854-8029-BBECCFB33B0E}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\bat\clear_cache.bat = scripts\bat\clear_cache.bat
+		scripts\bat\libs.bat = scripts\bat\libs.bat
+		scripts\bat\mods.bat = scripts\bat\mods.bat
+		scripts\bat\_set_game_dir.bat = scripts\bat\_set_game_dir.bat
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyGMML", "Core\EasyGMML\EasyGMML.csproj", "{E7F76F3F-15BC-411F-8669-2A9A08735ED1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoomGenerator", "RoomGenerator\RoomGenerator.csproj", "{78ADBE5E-EA29-447D-9B2E-647A77172EDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyGMMLTests", "EasyGMMLTests\EasyGMMLTests.csproj", "{310E3E6C-CD4C-4C0C-8DA7-A9A27ED89E18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyGMMLInstaller", "EasyGMMLInstaller\EasyGMMLInstaller.csproj", "{48CCC0C4-91E2-4102-BAE8-8FCA2792ED13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7F76F3F-15BC-411F-8669-2A9A08735ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7F76F3F-15BC-411F-8669-2A9A08735ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7F76F3F-15BC-411F-8669-2A9A08735ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7F76F3F-15BC-411F-8669-2A9A08735ED1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78ADBE5E-EA29-447D-9B2E-647A77172EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78ADBE5E-EA29-447D-9B2E-647A77172EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78ADBE5E-EA29-447D-9B2E-647A77172EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78ADBE5E-EA29-447D-9B2E-647A77172EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310E3E6C-CD4C-4C0C-8DA7-A9A27ED89E18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310E3E6C-CD4C-4C0C-8DA7-A9A27ED89E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310E3E6C-CD4C-4C0C-8DA7-A9A27ED89E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310E3E6C-CD4C-4C0C-8DA7-A9A27ED89E18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48CCC0C4-91E2-4102-BAE8-8FCA2792ED13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48CCC0C4-91E2-4102-BAE8-8FCA2792ED13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48CCC0C4-91E2-4102-BAE8-8FCA2792ED13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48CCC0C4-91E2-4102-BAE8-8FCA2792ED13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EE712764-9A55-4854-8029-BBECCFB33B0E} = {F2DDFBB2-F9E6-4A84-9E53-C1D8BC2DFAA5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD88E74A-A653-481C-910C-C7B6402DD843}
+	EndGlobalSection
+EndGlobal
