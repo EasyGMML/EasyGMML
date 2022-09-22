@@ -10,7 +10,30 @@ namespace EasyGMML;
 
 public class GameMakerMod : IGameMakerMod {
     public void Load(int audioGroup, UndertaleData data, ModData currentMod) {
-        if(audioGroup != 0) return;
+        try
+        {
+            // idk a better way to load both
+            foreach (string sound in Directory.GetFiles(Path.Combine(currentMod.path, "Sounds"), "*.wav"))
+            {
+                data.AddSound(audioGroup, 2, sound);
+            }
+            foreach (string sound in Directory.GetFiles(Path.Combine(currentMod.path, "Sounds"), "*.ogg"))
+            {
+                data.AddSound(audioGroup, 2, sound);
+            }
+        }
+        catch
+        {
+            Console.WriteLine("If you see this please tell name on discord about it (Sound loading error)");
+        }
+
+        if (audioGroup != 0) return;
+
+        UndertaleSprite sprite = new UndertaleSprite();
+
+        sprite.
+
+        data.Sprites.Add(sprite);
 
         try
         {
