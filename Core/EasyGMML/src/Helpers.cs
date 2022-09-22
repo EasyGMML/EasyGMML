@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UndertaleModLib;
@@ -148,6 +149,36 @@ namespace EasyGMML
             }
         }
 
+        public static Type FindType(string qualifiedTypeName)
+        {
+            Type t = Type.GetType(qualifiedTypeName);
 
+            if (t != null)
+            {
+                return t;
+            }
+            else
+            {
+                foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    t = asm.GetType(qualifiedTypeName);
+                    if (t != null)
+                        return t;
+                }
+                return null;
+            }
+        }
+
+        public static int GetValueOf(string enumName, string enumConst)
+        {
+            Type enumType = FindType(enumName);
+            if (enumType == null)
+            {
+                throw new ArgumentException("Specified enum type could not be found", "enumName");
+            }
+
+            object value = Enum.Parse(enumType, enumConst);
+            return Convert.ToInt32(value);
+        }
     }
 }

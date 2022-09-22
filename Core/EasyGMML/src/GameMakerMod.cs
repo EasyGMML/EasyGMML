@@ -12,8 +12,62 @@ public class GameMakerMod : IGameMakerMod {
     public void Load(int audioGroup, UndertaleData data, ModData currentMod) {
         if(audioGroup != 0) return;
 
-        // string jsonString = File.ReadAllText(Path.Combine(currentMod.path, "A_03_hello_spikes_copy.json"));
+        try
+        {
+            string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "Objects"));
 
+            for (int i = 0; i < infos.Length; i++)
+            {
+                FileInfo fo = new FileInfo(infos[i]);
+                if (fo.Extension == ".json")
+                {
+                    GameObject? obj = new GameObject();
+
+                    try
+                    {
+                        obj = JsonSerializer.Deserialize<GameObject>(File.ReadAllText(infos[i]));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed loading " + infos[i] + " skipping it");
+                        continue;
+                    }
+
+                    UndertaleGameObject gameObject = new UndertaleGameObject();
+
+                    gameObject.Name = data.Strings.MakeString(obj.name);
+
+                    Console.WriteLine(obj.name);
+
+                    foreach (EventType type in Enum.GetValues(typeof(EventType)))
+                    {
+                        foreach (KeyValuePair<string, CodeEntry> entry in obj.code)
+                        {
+                            if (type == (EventType)Enum.Parse(typeof(EventType), entry.Value.type))
+                            {
+                                // Type subType = Helpers.FindType("UndertaleModLib.Models.EventSubtype" + entry.Value.type);
+
+                                // dynamic stype = Enum.Parse(subType, entry.Value.subtype);
+                                EventType etype = (EventType)Enum.Parse(typeof(EventType), entry.Value.type);
+
+                                uint stype = (uint)Helpers.GetValueOf("UndertaleModLib.Models.EventSubtype" + entry.Value.type, entry.Value.subtype);
+
+                                gameObject.EventHandlerFor(etype, stype , data.Strings, data.Code, data.CodeLocals).AppendGmlSafe(File.ReadAllText(Path.Combine(currentMod.path, "Code\\" + entry.Value.name)), data);
+
+                                
+                            }
+                        }
+                    }
+
+                data.GameObjects.Add(gameObject);
+                }
+            }
+        }
+        catch
+        {
+            Console.WriteLine("If you see this please tell name on discord about it (Object loading error)");
+        }
+        
         try
         {
             string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "Rooms"));
@@ -35,12 +89,11 @@ public class GameMakerMod : IGameMakerMod {
                         continue;
                     }
 
-                    // File.ReadAllText(infos[i]);
                     UndertaleRoom newroom = Helpers.CreateBlankLevelRoom(room.name, data);
 
                     newroom.Width = (uint)room.width;
                     newroom.Height = (uint)room.height;
-                    newroom.CreationCodeId.Name.Content = room.creationCode; // might not work
+                    // newroom.CreationCodeId.Name.Content = room.creationCode; // didnt work
 
                     foreach (KeyValuePair<string, Object> entry in room.objects)
                     {
@@ -55,7 +108,6 @@ public class GameMakerMod : IGameMakerMod {
                         obj.X = entry.Value.x;
                         obj.Y = entry.Value.y;
                         obj.Rotation = entry.Value.rotation;
-                        // entry.Value
                     }
 
                     data.Rooms.Add(newroom);
@@ -64,8 +116,9 @@ public class GameMakerMod : IGameMakerMod {
         }
         catch
         {
-            Console.WriteLine("IF YOU SEE THIS TELL NAME ABOUT IT HE FUCKED UP");
+            Console.WriteLine("If you see this please tell name on discord about it (Room loading error)");
         }
+
         // read file into replace i think
         // data.Code.ByName("gml_Object_obj_player_Create_0").ReplaceGmlSafe("gml_Object_obj_player_Create_0", data); // not using cache because its weird soemtimes
         // mp_player_obj.EventHandlerFor(EventType.Other, EventSubtypeOther.User0, data.Strings, data.Code, data.CodeLocals)

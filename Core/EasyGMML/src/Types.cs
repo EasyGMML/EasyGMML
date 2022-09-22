@@ -26,10 +26,19 @@ namespace EasyGMML.Types
         public float rotation { get; set; }
         public string? layer { get; set; }
     }
-    // GameObjects have more params so they extend a normal object
-    public class GameObject : Object
+
+    public class GameObject
     {
-        public string? name { get; set; } // probally will be removed ask name will move to Object sometime soon
-        public Dictionary<string, dynamic>? objects { get; set; }
+        public string? name { get; set; }
+        public string? sprite { get; set; }
+        public bool persistent { get; set; }
+        public Dictionary<string, CodeEntry>? code { get; set; }
+    }
+
+    public class CodeEntry
+    {
+        public string? name { get; set; }
+        public string? type { get; set; }
+        public string? subtype { get; set; }
     }
 }
