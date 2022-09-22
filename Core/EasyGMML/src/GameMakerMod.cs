@@ -37,29 +37,27 @@ public class GameMakerMod : IGameMakerMod {
 
                     gameObject.Name = data.Strings.MakeString(obj.name);
 
-                    Console.WriteLine(obj.name);
-
                     foreach (EventType type in Enum.GetValues(typeof(EventType)))
                     {
                         foreach (KeyValuePair<string, CodeEntry> entry in obj.code)
                         {
                             if (type == (EventType)Enum.Parse(typeof(EventType), entry.Value.type))
                             {
-                                // Type subType = Helpers.FindType("UndertaleModLib.Models.EventSubtype" + entry.Value.type);
-
-                                // dynamic stype = Enum.Parse(subType, entry.Value.subtype);
                                 EventType etype = (EventType)Enum.Parse(typeof(EventType), entry.Value.type);
 
                                 uint stype = (uint)Helpers.GetValueOf("UndertaleModLib.Models.EventSubtype" + entry.Value.type, entry.Value.subtype);
 
-                                gameObject.EventHandlerFor(etype, stype , data.Strings, data.Code, data.CodeLocals).AppendGmlSafe(File.ReadAllText(Path.Combine(currentMod.path, "Code\\" + entry.Value.name)), data);
+                                if (!entry.Value.name.Contains(".gml"))
+                                {
+                                    entry.Value.name = entry.Value.name + ".gml";
+                                }
 
-                                
+                                gameObject.EventHandlerFor(etype, stype , data.Strings, data.Code, data.CodeLocals).AppendGmlSafe(File.ReadAllText(Path.Combine(currentMod.path, "Code\\" + entry.Value.name)), data);
                             }
                         }
                     }
 
-                data.GameObjects.Add(gameObject);
+                    data.GameObjects.Add(gameObject);
                 }
             }
         }
@@ -93,7 +91,7 @@ public class GameMakerMod : IGameMakerMod {
 
                     newroom.Width = (uint)room.width;
                     newroom.Height = (uint)room.height;
-                    // newroom.CreationCodeId.Name.Content = room.creationCode; // didnt work
+                    newroom.CreationCodeId = data.Code.ByName(room.creationCode);
 
                     foreach (KeyValuePair<string, Object> entry in room.objects)
                     {
