@@ -5,7 +5,6 @@ using EasyGMML.Types;
 using Object = EasyGMML.Types.Object;
 using UndertaleModLib.Models;
 using GmmlHooker;
-using System.Xml.Linq;
 
 namespace EasyGMML;
 
