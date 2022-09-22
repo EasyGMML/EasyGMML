@@ -5,12 +5,48 @@ using EasyGMML.Types;
 using Object = EasyGMML.Types.Object;
 using UndertaleModLib.Models;
 using GmmlHooker;
+using System.Xml.Linq;
 
 namespace EasyGMML;
 
 public class GameMakerMod : IGameMakerMod {
     public void Load(int audioGroup, UndertaleData data, ModData currentMod) {
         if(audioGroup != 0) return;
+
+        try
+        {
+            string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "GlobalScripts"));
+
+            for (int i = 0; i < infos.Length; i++)
+            {
+                FileInfo fo = new FileInfo(infos[i]);
+                if (fo.Extension == ".json")
+                {
+                    GlobalScript? gs = new GlobalScript();
+
+                    try
+                    {
+                        gs = JsonSerializer.Deserialize<GlobalScript>(File.ReadAllText(infos[i]));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed loading " + infos[i] + " skipping it");
+                        continue;
+                    }
+
+                    if (!gs.scriptName.Contains(".gml"))
+                    {
+                        gs.scriptName = gs.scriptName + ".gml";
+                    }
+
+                    data.CreateLegacyScript(gs.name, File.ReadAllText(Path.Combine(currentMod.path, "Code\\" + gs.scriptName)), (ushort)gs.argumentCount);
+                }
+            }
+        }
+        catch
+        {
+            Console.WriteLine("If you see this please tell name on discord about it (GlobalScript loading error)");
+        }
 
         try
         {

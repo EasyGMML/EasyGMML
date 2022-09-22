@@ -41,4 +41,11 @@ namespace EasyGMML.Types
         public string? type { get; set; }
         public string? subtype { get; set; }
     }
+
+    public class GlobalScript
+    {
+        public string? name { get; set; }
+        public string? scriptName { get; set; }
+        public int argumentCount { get; set; }
+    }
 }
