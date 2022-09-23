@@ -48,6 +48,10 @@
         <Analyzer Include="..\libs\gmml\patcher\GmmlInteropGenerator.dll" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    </ItemGroup>
+
     <Target Name="SetCurrentPath" AfterTargets="Build">
         <WriteLinesToFile File="bin\current.txt" Overwrite="true" Lines="$(OutputPath)" />
     </Target>

@@ -5,6 +5,8 @@ using EasyGMML.Types;
 using Object = EasyGMML.Types.Object;
 using UndertaleModLib.Models;
 using GmmlHooker;
+using System.Text;
+using System.Drawing;
 
 namespace EasyGMML;
 
@@ -29,12 +31,61 @@ public class GameMakerMod : IGameMakerMod {
 
         if (audioGroup != 0) return;
 
-        UndertaleSprite sprite = new UndertaleSprite();
+        try
+        {
+            string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "Textures"));
+            StringBuilder sb = new StringBuilder();
 
-        sprite.
+            for (int i = 0; i < infos.Length; i++)
+            {
+                FileInfo fo = new FileInfo(infos[i]);
+                if (fo.Extension == ".png")
+                {
+                    string name = fo.Name.Replace(".png", "");
 
-        data.Sprites.Add(sprite);
+                    UndertaleEmbeddedTexture texture = new UndertaleEmbeddedTexture();
+                    texture.Name = data.Strings.MakeString("Texture " + name);
+                    texture.TextureData.TextureBlob = File.ReadAllBytes(infos[i]);
+                    data.EmbeddedTextures.Add(texture);
 
+                    Image img = Image.FromFile(infos[i]);
+
+                    var width = img.Width;
+                    var height = img.Height;
+
+                    UndertaleTexturePageItem texturePageItem = new UndertaleTexturePageItem();
+                    texturePageItem.SourceX = (ushort)0;
+                    texturePageItem.SourceY = (ushort)0;
+                    texturePageItem.SourceWidth = (ushort)width;
+                    texturePageItem.SourceHeight = (ushort)height;
+                    texturePageItem.TargetX = 0;
+                    texturePageItem.TargetY = 0;
+                    texturePageItem.TargetWidth = (ushort)width;
+                    texturePageItem.TargetHeight = (ushort)height;
+                    texturePageItem.BoundingWidth = (ushort)width;
+                    texturePageItem.BoundingHeight = (ushort)height;
+                    texturePageItem.TexturePage = texture;
+
+                    data.TexturePageItems.Add(texturePageItem);
+
+                    UndertaleSprite.TextureEntry texentry = new UndertaleSprite.TextureEntry();
+                    texentry.Texture = texturePageItem;
+
+                    UndertaleSprite sprite = new UndertaleSprite();
+
+                    sprite.Textures.Add(texentry);
+
+                    sprite.Name = data.Strings.MakeString(name);
+
+                    data.Sprites.Add(sprite);
+                }
+            }
+        }
+        catch
+        {
+            Console.WriteLine("If you see this please tell name on discord about it (Texture loading error)");
+        }
+        
         try
         {
             string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "GlobalScripts"));
@@ -174,10 +225,5 @@ public class GameMakerMod : IGameMakerMod {
         {
             Console.WriteLine("If you see this please tell name on discord about it (Room loading error)");
         }
-
-        // read file into replace i think
-        // data.Code.ByName("gml_Object_obj_player_Create_0").ReplaceGmlSafe("gml_Object_obj_player_Create_0", data); // not using cache because its weird soemtimes
-        // mp_player_obj.EventHandlerFor(EventType.Other, EventSubtypeOther.User0, data.Strings, data.Code, data.CodeLocals)
-                // .AppendGmlSafe(GMLkvp["gml_Object_obj_mp_player_Other_10"], data);
     }
 }
