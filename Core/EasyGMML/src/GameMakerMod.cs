@@ -209,9 +209,7 @@ public class GameMakerMod : IGameMakerMod {
                     {
                         int index = Int32.Parse(entry.Key);
 
-                        string objName = room.objectNames.GetValue(index).ToString();
-
-                        UndertaleRoom.GameObject obj = Helpers.AddObjectToLayer(newroom, data, objName, entry.Value.layer);
+                        UndertaleRoom.GameObject obj = Helpers.AddObjectToLayer(newroom, data, entry.Value.type, entry.Value.layer);
 
                         obj.ScaleX = entry.Value.hscale;
                         obj.ScaleY = entry.Value.vscale;
@@ -260,17 +258,24 @@ public class GameMakerMod : IGameMakerMod {
                     switch (pcode.type)
                     {
                         case "prepend":
-                            data.HookCode(pcode.target, File.ReadAllText(Path.Combine(currentMod.path + $"\\Code\\{pcode.name}")) + "\n#orig#()");
+                            data.HookCode(pcode.target, $"{File.ReadAllText(Path.Combine(currentMod.path, "Code", pcode.name))} \n#orig#()");
                             break;
 
                         case "append":
-                            data.Code.First(code => code.Name.Content == pcode.target)
-                                .AppendGmlSafe(File.ReadAllText(Path.Combine(currentMod.path + $"\\Code\\{pcode.name}")), data);
+                            data.HookCode(pcode.target, $"#orig#()\n {File.ReadAllText(Path.Combine(currentMod.path, "Code", pcode.name))}");
                             break;
 
                         case "replace":
                             data.Code.First(code => code.Name.Content == pcode.target)
-                                .ReplaceGmlSafe(File.ReadAllText(Path.Combine(currentMod.path + $"\\Code\\{pcode.name}")), data);
+                                .ReplaceGmlSafe(File.ReadAllText(Path.Combine(currentMod.path, "Code", pcode.name)), data);
+                            break;
+
+                        case "hook":
+                            data.HookCode(pcode.target, File.ReadAllText(Path.Combine(currentMod.path, "Code", pcode.name)));
+                            break;
+
+                        case "hookFunction":
+                            data.HookFunction(pcode.target, File.ReadAllText(Path.Combine(currentMod.path, "Code", pcode.name)));
                             break;
 
                         default:

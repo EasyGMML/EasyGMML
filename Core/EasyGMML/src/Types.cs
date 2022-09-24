@@ -15,7 +15,6 @@ namespace EasyGMML.Types
         public int width { get; set; }
         public int height { get; set; }
         public string? creationCode { get; set; }
-        public string[]? objectNames { get; set; }
         public Dictionary<string, Object>? objects { get; set; }
     }
 
@@ -27,6 +26,7 @@ namespace EasyGMML.Types
         public float vscale { get; set; }
         public float rotation { get; set; }
         public string? layer { get; set; }
+        public string? type { get; set; }
     }
 
     public class GameObject

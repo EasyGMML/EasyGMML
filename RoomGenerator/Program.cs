@@ -8,7 +8,6 @@ public class Program
 {
     public static void Main()
     {
-        List<string> objectNames = new List<string>();
         Dictionary<string, Object> objects = new Dictionary<string, Object>();
 
 #if DEBUG
@@ -70,15 +69,12 @@ public class Program
                         }
                     }
 
-                    objectNames.Add(obj.ObjectDefinition.Name.Content);
-                    objects.Add(curObj.ToString(), new Object { x=obj.X, y=obj.Y, vscale=obj.ScaleY, hscale=obj.ScaleX, rotation=obj.Rotation, layer=layerName });
+                    objects.Add(curObj.ToString(), new Object { x=obj.X, y=obj.Y, vscale=obj.ScaleY, hscale=obj.ScaleX, rotation=obj.Rotation, layer=layerName, type=obj.ObjectDefinition.Name.Content });
 
                     curObj++;
                 }
             }
         }
-
-        String[] names = objectNames.ToArray();
 
         var room = new Room
         {
@@ -89,8 +85,6 @@ public class Program
             height = roomHeight,
 
             creationCode = creationCode,
-
-            objectNames = names,
 
             objects = objects
         };
