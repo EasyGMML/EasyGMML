@@ -45,7 +45,14 @@ public class Program
             {
                 roomWidth = (int)Room.Width;
                 roomHeight = (int)Room.Height;
-                creationCode = Room.CreationCodeId.Name.Content;
+                if (Room.CreationCodeId == null)
+                {
+                    creationCode = "";
+                }
+                else
+                {
+                    creationCode = Room.CreationCodeId.Name.Content;
+                }
 
                 foreach (UndertaleRoom.GameObject obj in Room.GameObjects)
                 {

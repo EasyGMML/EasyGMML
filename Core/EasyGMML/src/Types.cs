@@ -50,4 +50,11 @@ namespace EasyGMML.Types
         public string? scriptName { get; set; }
         public int argumentCount { get; set; }
     }
+
+    public class Code
+    {
+        public string? name { get; set; }
+        public string? target { get; set; }
+        public string? type { get; set; }
+    }
 }

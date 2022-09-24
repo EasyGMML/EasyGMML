@@ -5,8 +5,8 @@ using EasyGMML.Types;
 using Object = EasyGMML.Types.Object;
 using UndertaleModLib.Models;
 using GmmlHooker;
-using System.Text;
 using System.Drawing;
+using System.Xml.Linq;
 
 namespace EasyGMML;
 
@@ -30,11 +30,10 @@ public class GameMakerMod : IGameMakerMod {
         }
 
         if (audioGroup != 0) return;
-
+        
         try
         {
             string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "Textures"));
-            StringBuilder sb = new StringBuilder();
 
             for (int i = 0; i < infos.Length; i++)
             {
@@ -198,9 +197,13 @@ public class GameMakerMod : IGameMakerMod {
 
                     UndertaleRoom newroom = Helpers.CreateBlankLevelRoom(room.name, data);
 
+                    newroom.SetupRoom(false);
+
                     newroom.Width = (uint)room.width;
                     newroom.Height = (uint)room.height;
-                    newroom.CreationCodeId = data.Code.ByName(room.creationCode);
+
+                    if (room.creationCode != null)
+                        newroom.CreationCodeId = data.Code.ByName(room.creationCode);
 
                     foreach (KeyValuePair<string, Object> entry in room.objects)
                     {
@@ -211,11 +214,13 @@ public class GameMakerMod : IGameMakerMod {
                         UndertaleRoom.GameObject obj = Helpers.AddObjectToLayer(newroom, data, objName, entry.Value.layer);
 
                         obj.ScaleX = entry.Value.hscale;
-                        obj.ScaleX = entry.Value.vscale;
+                        obj.ScaleY = entry.Value.vscale;
                         obj.X = entry.Value.x;
                         obj.Y = entry.Value.y;
                         obj.Rotation = entry.Value.rotation;
                     }
+
+                    newroom.SetupRoom(false);
 
                     data.Rooms.Add(newroom);
                 }
@@ -224,6 +229,60 @@ public class GameMakerMod : IGameMakerMod {
         catch
         {
             Console.WriteLine("If you see this please tell name on discord about it (Room loading error)");
+        }
+
+        try
+        {
+            string[] infos = Directory.GetFiles(Path.Combine(currentMod.path, "Code"));
+
+            for (int i = 0; i < infos.Length; i++)
+            {
+                FileInfo fo = new FileInfo(infos[i]);
+                if (fo.Extension == ".json")
+                {
+                    Code? pcode = new Code();
+
+                    try
+                    {
+                        pcode = JsonSerializer.Deserialize<Code>(File.ReadAllText(infos[i]));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed loading " + infos[i] + " skipping it");
+                        continue;
+                    }
+
+                    if (!pcode.name.Contains(".gml"))
+                    {
+                        pcode.name = pcode.name + ".gml";
+                    }
+
+                    switch (pcode.type)
+                    {
+                        case "prepend":
+                            data.HookCode(pcode.target, File.ReadAllText(Path.Combine(currentMod.path + $"\\Code\\{pcode.name}")) + "\n#orig#()");
+                            break;
+
+                        case "append":
+                            data.Code.First(code => code.Name.Content == pcode.target)
+                                .AppendGmlSafe(File.ReadAllText(Path.Combine(currentMod.path + $"\\Code\\{pcode.name}")), data);
+                            break;
+
+                        case "replace":
+                            data.Code.First(code => code.Name.Content == pcode.target)
+                                .ReplaceGmlSafe(File.ReadAllText(Path.Combine(currentMod.path + $"\\Code\\{pcode.name}")), data);
+                            break;
+
+                        default:
+                            Console.WriteLine($"{infos[i]} has a bugged type");
+                            break;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            Console.WriteLine("If you see this please tell name on discord about it (Code loading error)");
         }
     }
 }
